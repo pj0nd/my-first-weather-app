@@ -30,20 +30,26 @@ function formatDay(timestamp) {
 
 function convertToFahr(event) {
   event.preventDefault();
-  let tempCel = document.querySelector("#currentTemp");
-  let fahr = (celsius * 9)/5+32;
-  tempCel.innerHTML = `${Math.round(fahr)}°F`;
-  celsiusConverter.classList.remove("active");
-  fahrConverter.classList.add("active");
+  let temperatureElement = document.querySelector("#temp");
+  let fahr = (celsiusTemp * 9) / 5 + 32;
+  temperatureElement.innerHTML = `${Math.round(fahr)}°F`;
+  celsiusLink.classList.remove("active");
+  fahrenheitLink.classList.add("active");
 }
+
+let fahrenheitLink = document.querySelector("#to-fahrenheit");
+fahrenheitLink.addEventListener("click", convertToFahr);
 
 function convertToCelsius(event) {
   event.preventDefault();
-  let celsiusTemp = document.querySelector("#currentTemp");
-  celsiusTemp.innerHTML = `${Math.round(celsius)}°C`;
-  fahrConverter.classList.remove("active");
-  celsiusConverter.classList.add("active");
+  let temperatureElement = document.querySelector("#temp");
+  temperatureElement.innerHTML = `${Math.round(celsiusTemp)}°C`;
+  fahrenheitLink.classList.remove("active");
+  celsiusLink.classList.add("active");
 }
+
+let celsiusLink = document.querySelector("#to-celsius");
+celsiusLink.addEventListener("click", convertToCelsius);
 
 function displayTemp(response) {
   let currentTemp = document.querySelector("#temp");
