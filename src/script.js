@@ -27,30 +27,47 @@ function formatDay(timestamp) {
 
   return days[day];
 }
+function displayForecast(response) {
+  let forecast = response.data.daily;
+  let forecastElement = document.querySelector("#forecast");
+  let forecastHTML = `<div class="row">`;
 
-function convertToFahr(event) {
-  event.preventDefault();
-  let temperatureElement = document.querySelector("#temp");
-  let fahr = (celsiusTemp * 9) / 5 + 32;
-  temperatureElement.innerHTML = `${Math.round(fahr)}°F`;
-  celsiusLink.classList.remove("active");
-  fahrenheitLink.classList.add("active");
+  forecast.forEach(function (forecastDay, index) {
+    if (index < 6) {
+      forecastHTML =
+        forecastHTML +
+        `
+    <div class="col-2">
+      <div class="weather-forecast-date">${formatDay(forecastDay.dt)}</div>
+      <img
+        src="http://openweathermap.org/img/wn/${
+          forecastDay.weather[0].icon
+        }@2x.png"
+        alt=""
+        width="55"
+      />
+      <div class="weather-forecast-temp">
+        <span class="weather-forcast-temp-max"> ${Math.round(
+          forecastDay.temp.max
+        )}° </span>
+        <span class="weather-forecast-temp-min">${Math.round(
+          forecastDay.temp.min
+        )}°</span>
+      </div>
+    </div>`;
+    }
+  });
+
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
 }
-
-let fahrenheitLink = document.querySelector("#to-fahrenheit");
-fahrenheitLink.addEventListener("click", convertToFahr);
-
-function convertToCelsius(event) {
-  event.preventDefault();
-  let temperatureElement = document.querySelector("#temp");
-  temperatureElement.innerHTML = `${Math.round(celsiusTemp)}°C`;
-  fahrenheitLink.classList.remove("active");
-  celsiusLink.classList.add("active");
+function getForecast(coordinates) {
+  let apiKey = "1266ad07b66517497b1acf79ea5a6a64";
+  let lon = coordinates.lon;
+  let lat = coordinates.lat;
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayForecast);
 }
-
-let celsiusLink = document.querySelector("#to-celsius");
-celsiusLink.addEventListener("click", convertToCelsius);
-
 function displayTemp(response) {
   let currentTemp = document.querySelector("#temp");
   let cityElement = document.querySelector("#city");
